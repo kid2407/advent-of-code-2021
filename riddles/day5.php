@@ -28,21 +28,48 @@ function getPointsOnLine(array $coordinates, bool $includeDiagonal = false): arr
 
     $points = [];
 
-    // horizontal
-    if ($x1 === $x2) {
+    if ($x1 === $x2) { // horizontal
         $start = min($y1, $y2);
         $end   = max($y1, $y2);
         foreach (range($start, $end) as $singlePoint) {
             $points[] = [$x1, $singlePoint];
         }
-    }
-
-    // vertical
-    if ($y1 === $y2) {
+    } elseif ($y1 === $y2) { // vertical
         $start = min($x1, $x2);
         $end   = max($x1, $x2);
         foreach (range($start, $end) as $singlePoint) {
-            $points[] = [$y1, $singlePoint];
+            $points[] = [$singlePoint, $y1];
+        }
+    } else {
+        if ($includeDiagonal) { // diagonal
+            $horizontalPositive = null;
+            $verticalPositive   = null;
+            $lenght             = 0;
+            if ($x2 > $x1 && $y2 > $y1) {
+                echo "bottom right " . sprintf("(%d|%d) (%d|%d)", $x1, $y1, $x2, $y2) . PHP_EOL;
+                $horizontalPositive = true;
+                $verticalPositive   = true;
+                $lenght             = $x2 - $x1;
+            } elseif ($x2 > $x1 && $y2 < $y1) {
+                echo "top right " . sprintf("(%d|%d) (%d|%d)", $x1, $y1, $x2, $y2) . PHP_EOL;
+                $horizontalPositive = true;
+                $verticalPositive   = false;
+                $lenght             = $x2 - $x1;
+            } elseif ($x2 < $x1 && $y2 > $y1) {
+                echo "bottom left " . sprintf("(%d|%d) (%d|%d)", $x1, $y1, $x2, $y2) . PHP_EOL;
+                $horizontalPositive = false;
+                $verticalPositive   = true;
+                $lenght             = $x1 - $x2;
+            } elseif ($x2 < $x1 && $y2 < $y1) {
+                echo "top left " . sprintf("(%d|%d) (%d|%d)", $x1, $y1, $x2, $y2) . PHP_EOL;
+                $horizontalPositive = false;
+                $verticalPositive   = false;
+                $lenght             = $x1 - $x2;
+            }
+
+            for ($i = 0; $i <= $lenght; $i++) {
+                $points[] = [$horizontalPositive ? $x1 + $i : $x1 - $i, $verticalPositive ? $y1 + $i : $y1 - $i];
+            }
         }
     }
 
@@ -73,9 +100,6 @@ foreach ($lines as $line) {
     $points = getPointsOnLine($line);
     if (!empty($points)) {
         $lineCount++;
-//        echo sprintf("Line number %s: ", $lineCount);
-//        print_r($points);
-
         $grid = addPointsToGrid($grid, $points);
     }
 }
