@@ -5,9 +5,9 @@
  */
 class InputHelper
 {
-    private static function readFile(string $filename): array
+    private static function readFileAsLines(string $filename): array
     {
-        if (!file_exists(INPUT_FILE)) {
+        if (!file_exists($filename)) {
             throw new RuntimeException("No input file found.");
         }
 
@@ -35,7 +35,25 @@ class InputHelper
     {
         return array_map(function ($string) {
             return trim($string);
-        }, self::readFile($filename));
+        }, self::readFileAsLines($filename));
+    }
+
+    /**
+     * @param string $filename
+     * @return string
+     */
+    public static function readFileAsString(string $filename): string
+    {
+        if (!file_exists($filename)) {
+            throw new RuntimeException("No input file found.");
+        }
+
+        $content = file_get_contents($filename);
+        if (!$content) {
+            throw new RuntimeException("Could not open input file.");
+        }
+
+        return trim($content);
     }
 
     /**
@@ -46,6 +64,6 @@ class InputHelper
     {
         return array_map(function ($string) {
             return intval($string);
-        }, self::readFile($filename));
+        }, self::readFileAsLines($filename));
     }
 }
