@@ -5,7 +5,7 @@
 
 include_once '../InputHelper.php';
 
-const INPUT_FILE = '../inputs/day6';
+const INPUT_FILE = '../inputs/day6.txt';
 
 $inputData        = InputHelper::readFileAsString(INPUT_FILE);
 $initialAges      = explode(',', $inputData);

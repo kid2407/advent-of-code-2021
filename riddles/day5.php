@@ -5,7 +5,7 @@
 
 include_once '../InputHelper.php';
 
-const INPUT_FILE = '../inputs/day5';
+const INPUT_FILE = '../inputs/day5.txt';
 
 $inputData = InputHelper::readFileAsStrings(INPUT_FILE);
 

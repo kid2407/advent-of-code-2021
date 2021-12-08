@@ -5,7 +5,7 @@
 
 include_once '../InputHelper.php';
 
-const INPUT_FILE = '../inputs/day3';
+const INPUT_FILE = '../inputs/day3.txt';
 
 $diagnosticData      = InputHelper::readFileAsStrings(INPUT_FILE);
 $diagnosticDataCount = count($diagnosticData);

@@ -3,7 +3,7 @@
  * @author Tobias Franz
  */
 
-const INPUT_FILE = '../inputs/day1';
+const INPUT_FILE = '../inputs/day1.txt';
 
 if (!file_exists(INPUT_FILE)) {
     echo "No input file found!" . PHP_EOL;

@@ -5,7 +5,7 @@
 
 include_once '../InputHelper.php';
 
-const INPUT_FILE = '../inputs/day7';
+const INPUT_FILE = '../inputs/day7.txt';
 
 $inputData            = InputHelper::readFileAsString(INPUT_FILE);
 $initialCrabPositions = array_map('intval', explode(',', $inputData));
