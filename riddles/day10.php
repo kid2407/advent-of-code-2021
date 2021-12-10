@@ -145,7 +145,7 @@ function calculatePointsForCompletions(array $incompleteLines): int
 
     sort($scores);
 
-    return $scores[count($scores) - 1];
+    return $scores[(count($scores) - 1) / 2];
 }
 
 $lines = InputHelper::readFileAsStrings(INPUT_FILE);
