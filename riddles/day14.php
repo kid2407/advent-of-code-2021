@@ -71,12 +71,66 @@ function performInsertions(string $polymerTemplate, array $insertionRules, int $
     return $polymerTemplate;
 }
 
+/**
+ * @param string $polymerTemplate
+ * @param array $insertionRules
+ * @param int $steps
+ * @return array
+ */
+function performInsertionsEfficient(string $polymerTemplate, array $insertionRules, int $steps): array
+{
+    $pairs = [];
+    foreach ($insertionRules as $pair => $insertion) {
+        $pairs[$pair] = substr_count($polymerTemplate, $pair);
+    }
+
+    foreach (range(1, $steps) as $ignored) {
+        foreach ($pairs as $pair => $insertion) {
+            $count = count($insertion);
+            if ($count > 0) {
+                $firstPair  = $pair[0] . $insertion;
+                $secondPair = $insertion . $pair[1];
+                if (!isset($pairs[$firstPair])) {
+                    $pairs[$firstPair] = $count;
+                } else {
+                    $pairs[$firstPair] += $count;
+                }
+
+                if (!isset($pairs[$secondPair])) {
+                    $pairs[$secondPair] = $count;
+                } else {
+                    $pairs[$secondPair] += $count;
+                }
+            }
+        }
+    }
+
+    return $pairs;
+}
+
 $lines = InputHelper::readFileAsStrings(INPUT_FILE);
 [$polymerTemplate, $insertionRules] = parseInputLines($lines);
 
 // Task 1
-$start                    = microtime(true);
-$steps                    = 10;
+$start           = microtime(true);
+$steps           = 10;
+$newPairs        = performInsertionsEfficient($polymerTemplate, $insertionRules, $steps);
+$characterCounts = [];
+foreach ($newPairs as $pair => $amount) {
+    $firstChar  = $pair[0];
+    $secondChar = $pair[1];
+    if (!isset($characterCounts[$firstChar])) {
+        $characterCounts[$firstChar] = $amount;
+    } else {
+        $characterCounts[$firstChar] += $amount;
+    }
+    if (!isset($characterCounts[$secondChar])) {
+        $characterCounts[$secondChar] = $amount;
+    } else {
+        $characterCounts[$secondChar] += $amount;
+    }
+}
+
 $polymerTemplate          = performInsertions($polymerTemplate, $insertionRules, $steps);
 $splitPolymerStringCounts = array_count_values(str_split($polymerTemplate));
 $maxCount                 = max($splitPolymerStringCounts);
@@ -85,11 +139,11 @@ $end                      = microtime(true);
 echo sprintf("New polymer template has length %s after %d steps in %.3fms%sThe result is %d - %d = %d%s", strlen($polymerTemplate), $steps, ($end - $start) * 1000, PHP_EOL, $maxCount, $minCount, $maxCount - $minCount, PHP_EOL);
 
 // Task 2
-$start                    = microtime(true);
-$steps                    = 40;
-$polymerTemplate          = performInsertions($polymerTemplate, $insertionRules, $steps);
-$splitPolymerStringCounts = array_count_values(str_split($polymerTemplate));
-$maxCount                 = max($splitPolymerStringCounts);
-$minCount                 = min($splitPolymerStringCounts);
-$end                      = microtime(true);
-echo sprintf("New polymer template has length %s after %d steps in %.3fms%sThe result is %d - %d = %d%s", strlen($polymerTemplate), $steps, ($end - $start) * 1000, PHP_EOL, $maxCount, $minCount, $maxCount - $minCount, PHP_EOL);
+//$start                    = microtime(true);
+//$steps                    = 40;
+//$polymerTemplate          = performInsertions($polymerTemplate, $insertionRules, $steps);
+//$splitPolymerStringCounts = array_count_values(str_split($polymerTemplate));
+//$maxCount                 = max($splitPolymerStringCounts);
+//$minCount                 = min($splitPolymerStringCounts);
+//$end                      = microtime(true);
+//echo sprintf("New polymer template has length %s after %d steps in %.3fms%sThe result is %d - %d = %d%s", strlen($polymerTemplate), $steps, ($end - $start) * 1000, PHP_EOL, $maxCount, $minCount, $maxCount - $minCount, PHP_EOL);
